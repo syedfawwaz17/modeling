@@ -1,4 +1,6 @@
 import { ImageResponse } from 'next/og';
+import fs from 'fs/promises';
+import path from 'path';
 
 export const runtime = 'edge';
 
@@ -6,27 +8,22 @@ export const size = {
   width: 32,
   height: 32,
 };
+export const contentType = 'image/png';
 
-export default function Icon() {
+export default async function Icon() {
+  const imagePath = path.join(process.cwd(), 'src', 'app', 'p1.png');
+  const imageBuffer = await fs.readFile(imagePath);
+
   return new ImageResponse(
     (
-      <div
+      <img
+        width={32}
+        height={32}
+        src={imageBuffer as any}
         style={{
-          fontSize: 24,
-          background: '#FAD2E1',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#333',
-          borderRadius: '8px',
-          fontFamily: 'Playfair Display, serif',
-          fontWeight: 'bold',
+          borderRadius: '4px',
         }}
-      >
-        PB
-      </div>
+      />
     ),
     {
       ...size,
