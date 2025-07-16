@@ -56,15 +56,13 @@ export async function suggestOutfitTransitions(
   return suggestOutfitTransitionsFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'suggestOutfitTransitionsPrompt',
+const descriptionPrompt = ai.definePrompt({
+  name: 'suggestOutfitTransitionsDescriptionPrompt',
   input: {schema: SuggestOutfitTransitionsInputSchema},
-  output: {schema: SuggestOutfitTransitionsOutputSchema},
+  output: {schema: z.object({ transitionDescription: z.string() }) },
   prompt: `You are a fashion stylist creating outfit transitions between two given outfits.
 
   Given two outfit images and a transition style, create a description of how to transition from the first outfit to the second.
-
-  Optionally, if you are able to generate the transition image, create it and return a data URI for the generated image in the "generatedImage" output field. Only generate the transition image if it is possible given the input outfits and styles.
 
   Here are the details of the outfit transition:
   Transition Style: {{{transitionStyle}}}
@@ -81,7 +79,26 @@ const suggestOutfitTransitionsFlow = ai.defineFlow(
     outputSchema: SuggestOutfitTransitionsOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    // Step 1: Generate the description
+    const { output: descriptionOutput } = await descriptionPrompt(input);
+    const transitionDescription = descriptionOutput?.transitionDescription || 'A stylish transition.';
+
+    // Step 2: Generate the image
+    const { media } = await ai.generate({
+      model: 'googleai/gemini-2.0-flash-preview-image-generation',
+      prompt: [
+        {text: `Generate an image that represents a transition between the two following outfits, based on this description: "${transitionDescription}". The transition style should be "${input.transitionStyle}".`},
+        {media: {url: input.image1DataUri}},
+        {media: {url: input.image2DataUri}}
+      ],
+      config: {
+        responseModalities: ['TEXT', 'IMAGE'],
+      },
+    });
+
+    return {
+      transitionDescription,
+      generatedImage: media?.url,
+    };
   }
 );
