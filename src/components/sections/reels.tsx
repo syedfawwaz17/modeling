@@ -1,13 +1,77 @@
+"use client";
+
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import { PlayCircle } from 'lucide-react';
-import Link from 'next/link';
+import { PlayCircle, PauseCircle } from 'lucide-react';
 
 const videos = [
   { thumbnailUrl: '/reels/thumb1.jpg', videoUrl: '/reels/reel1.mp4', alt: 'Reel 1', hint: 'fashion reel' },
   { thumbnailUrl: '/reels/thumb2.jpg', videoUrl: '/reels/reel2.mp4', alt: 'Reel 2', hint: 'behind scenes' },
   { thumbnailUrl: '/reels/thumb3.jpg', videoUrl: '/reels/reel3.mp4', alt: 'Reel 3', hint: 'runway video' },
 ];
+
+const ReelCard = ({ thumbnailUrl, videoUrl, alt, hint }: (typeof videos)[0]) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handlePlay = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handlePause = () => {
+     if (videoRef.current) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  }
+
+  const handleVideoClick = () => {
+    if (isPlaying) {
+      handlePause();
+    } else {
+      handlePlay();
+    }
+  }
+
+  return (
+    <Card className="overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl bg-card border-none group">
+      <CardContent className="p-0 relative aspect-[9/16]">
+        {isPlaying ? (
+           <video
+            ref={videoRef}
+            src={videoUrl}
+            className="w-full h-full object-cover"
+            onClick={handleVideoClick}
+            onEnded={() => setIsPlaying(false)}
+            controls
+            autoPlay
+          />
+        ) : (
+          <>
+            <Image
+              src={thumbnailUrl}
+              alt={alt}
+              fill
+              className="object-cover w-full h-full"
+              data-ai-hint={hint}
+            />
+            <div 
+              className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
+              onClick={handlePlay}
+            >
+              <PlayCircle className="text-white h-16 w-16 transition-transform duration-300 group-hover:scale-110" />
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
 
 export default function ReelsSection() {
   return (
@@ -19,23 +83,7 @@ export default function ReelsSection() {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {videos.map((video, index) => (
-            <Link href={video.videoUrl} key={index} className="block group" target="_blank" rel="noopener noreferrer">
-              <Card className="overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl bg-card border-none">
-                <CardContent className="p-0 relative">
-                  <Image
-                    src={video.thumbnailUrl}
-                    alt={video.alt}
-                    width={400}
-                    height={700}
-                    className="object-cover w-full h-auto"
-                    data-ai-hint={video.hint}
-                  />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <PlayCircle className="text-white h-16 w-16 transition-transform duration-300 group-hover:scale-110" />
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <ReelCard key={index} {...video} />
           ))}
         </div>
       </div>
