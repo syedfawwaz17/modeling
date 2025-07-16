@@ -3,11 +3,11 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export default function AboutSection() {
   return (
-    <section id="about" className="bg-secondary">
+    <section id="about" className="bg-background">
       <div className="container mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="w-full h-full flex justify-center">
-             <Card className="overflow-hidden shadow-lg w-full max-w-md">
+             <Card className="overflow-hidden shadow-lg w-full max-w-md bg-card border-none">
                 <CardContent className="p-0">
                    <Image
                       src="https://placehold.co/600x800.png"

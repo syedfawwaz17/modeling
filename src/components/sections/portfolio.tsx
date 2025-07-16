@@ -12,17 +12,17 @@ import { handleHighlightPhotos } from '@/app/actions';
 
 const portfolioImages = {
   fashion: [
-    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 1', hint: 'editorial fashion' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 2', hint: 'haute couture' },
+    { src: 'https://placehold.co/600x800/E0BBE4/000000?text=Fashion+1', alt: 'Fashion photo 1', hint: 'editorial fashion' },
+    { src: 'https://placehold.co/600x800/957DAD/FFFFFF?text=Fashion+2', alt: 'Fashion photo 2', hint: 'haute couture' },
   ],
   editorial: [
-    { src: 'https://placehold.co/800x600.png', alt: 'Editorial photo 1', hint: 'magazine shoot' },
+    { src: 'https://placehold.co/800x600/D291BC/FFFFFF?text=Editorial+1', alt: 'Editorial photo 1', hint: 'magazine shoot' },
   ],
   runway: [
-    { src: 'https://placehold.co/600x800.png', alt: 'Runway photo 1', hint: 'runway walk' },
+    { src: 'https://placehold.co/600x800/FEC8D8/000000?text=Runway+1', alt: 'Runway photo 1', hint: 'runway walk' },
   ],
   commercial: [
-    { src: 'https://placehold.co/800x600.png', alt: 'Commercial photo 1', hint: 'commercial smile' },
+    { src: 'https://placehold.co/800x600/FFDFD3/000000?text=Commercial+1', alt: 'Commercial photo 1', hint: 'commercial smile' },
   ],
 };
 
@@ -32,7 +32,7 @@ function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: st
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card className="overflow-hidden group cursor-pointer transform transition-transform duration-300 hover:scale-105 shadow-md hover:shadow-xl">
+        <Card className="overflow-hidden group cursor-pointer transform transition-transform duration-300 hover:scale-105 shadow-md hover:shadow-xl bg-card border-none">
           <CardContent className="p-0 relative">
             <Image
               src={src}
@@ -48,7 +48,7 @@ function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: st
           </CardContent>
         </Card>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl p-0">
+      <DialogContent className="max-w-4xl p-0 bg-transparent border-none">
         <Image src={src} alt={alt} width={800} height={1200} className="w-full h-auto rounded-lg" data-ai-hint={hint} />
       </DialogContent>
     </Dialog>
@@ -64,19 +64,23 @@ export default function PortfolioSection() {
   const onHighlight = async () => {
     setIsHighlighting(true);
     setHighlightedPhotos([]);
-    const result = await handleHighlightPhotos(allImageUrls);
-    if (result.success && result.data?.topPhotoUrls) {
-      setHighlightedPhotos(result.data.topPhotoUrls);
-      setActiveTab('highlights');
-      toast({
-        title: "Success!",
-        description: "AI has selected the top photos.",
-      });
-    } else {
-      toast({
+    try {
+      const result = await handleHighlightPhotos(allImageUrls);
+      if (result.success && result.data?.topPhotoUrls) {
+        setHighlightedPhotos(result.data.topPhotoUrls);
+        setActiveTab('highlights');
+        toast({
+          title: "Success!",
+          description: "AI has selected the top photos.",
+        });
+      } else {
+        throw new Error(result.error || "Could not highlight photos.");
+      }
+    } catch (error) {
+       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: result.error || "Could not highlight photos.",
+        description: error instanceof Error ? error.message : "An unknown error occurred.",
       });
     }
     setIsHighlighting(false);
@@ -85,26 +89,21 @@ export default function PortfolioSection() {
   const allImagesMap = useMemo(() => new Map(Object.values(portfolioImages).flat().map(img => [img.src, img])), []);
 
   return (
-    <section id="portfolio" className="bg-background">
+    <section id="portfolio" className="bg-secondary">
       <div className="container mx-auto text-center">
-        <h2 className="font-headline text-4xl md:text-5xl font-bold mb-4">Portfolio</h2>
-        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-          A curated collection of my work across various domains of modeling.
-        </p>
-
-        <div className="flex justify-center mb-8">
-          <Button onClick={onHighlight} disabled={isHighlighting}>
+        <div className="flex justify-center mb-12">
+          <Button onClick={onHighlight} disabled={isHighlighting} size="lg">
             {isHighlighting ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             ) : (
-              <Sparkles className="mr-2 h-4 w-4" />
+              <Sparkles className="mr-2 h-5 w-5" />
             )}
-            {isHighlighting ? 'Analyzing...' : 'Highlight Top Photos'}
+            {isHighlighting ? 'Analyzing...' : 'Let AI Highlight Top Photos'}
           </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-background/50">
             <TabsTrigger value="highlights" disabled={highlightedPhotos.length === 0}>Highlights</TabsTrigger>
             <TabsTrigger value="fashion">Fashion</TabsTrigger>
             <TabsTrigger value="editorial">Editorial</TabsTrigger>

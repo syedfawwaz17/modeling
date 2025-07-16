@@ -3,9 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PlayCircle } from 'lucide-react';
 
 const videos = [
-  { src: 'https://placehold.co/400x700.png', alt: 'Reel 1', hint: 'fashion reel' },
-  { src: 'https://placehold.co/400x700.png', alt: 'Reel 2', hint: 'behind scenes' },
-  { src: 'https://placehold.co/400x700.png', alt: 'Reel 3', hint: 'runway video' },
+  { src: 'https://placehold.co/400x700/E0BBE4/000000', alt: 'Reel 1', hint: 'fashion reel' },
+  { src: 'https://placehold.co/400x700/957DAD/FFFFFF', alt: 'Reel 2', hint: 'behind scenes' },
+  { src: 'https://placehold.co/400x700/D291BC/FFFFFF', alt: 'Reel 3', hint: 'runway video' },
 ];
 
 export default function ReelsSection() {
@@ -19,7 +19,7 @@ export default function ReelsSection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {videos.map((video, index) => (
             <a href="#" key={index} className="block group">
-              <Card className="overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+              <Card className="overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl bg-card border-none">
                 <CardContent className="p-0 relative">
                   <Image
                     src={video.src}
@@ -29,7 +29,7 @@ export default function ReelsSection() {
                     className="object-cover w-full h-auto"
                     data-ai-hint={video.hint}
                   />
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <PlayCircle className="text-white h-16 w-16 transition-transform duration-300 group-hover:scale-110" />
                   </div>
                 </CardContent>

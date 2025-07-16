@@ -91,7 +91,7 @@ export default function LookbookSection() {
                 Discover creative outfit transitions. Upload two looks and let our AI style a seamless transformation.
             </p>
         </div>
-        <Card className="max-w-4xl mx-auto shadow-lg">
+        <Card className="max-w-4xl mx-auto shadow-lg bg-card border-border">
             <CardContent className="p-6 md:p-8">
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <div className="grid md:grid-cols-2 gap-8">

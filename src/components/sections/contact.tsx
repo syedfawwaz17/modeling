@@ -6,7 +6,7 @@ import { Mail, Instagram, MessageCircle, Send } from 'lucide-react';
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="bg-secondary">
+    <section id="contact" className="bg-background">
       <div className="container mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -16,23 +16,23 @@ export default function ContactSection() {
                 </p>
                 <div className="flex items-center gap-4">
                   <a href="mailto:pihubishnoi134@gmail.com" aria-label="Email" className="group">
-                    <div className="p-3 bg-background rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent">
+                    <div className="p-3 bg-secondary rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:bg-primary/20">
                       <Mail className="h-6 w-6 text-primary" />
                     </div>
                   </a>
                   <a href="https://instagram.com/Priyankaabishnoii" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="group">
-                     <div className="p-3 bg-background rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent">
+                     <div className="p-3 bg-secondary rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:bg-primary/20">
                       <Instagram className="h-6 w-6 text-primary" />
                     </div>
                   </a>
                   <a href="https://wa.me/7851000469" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="group">
-                     <div className="p-3 bg-background rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent">
+                     <div className="p-3 bg-secondary rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:bg-primary/20">
                       <MessageCircle className="h-6 w-6 text-primary" />
                     </div>
                   </a>
                 </div>
             </div>
-             <Card className="shadow-lg">
+             <Card className="shadow-lg bg-card border-border">
                 <CardHeader>
                     <CardTitle className="font-headline text-2xl">Contact Form</CardTitle>
                     <CardDescription>Fill out the form below to send me a message directly.</CardDescription>
