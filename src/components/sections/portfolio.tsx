@@ -10,24 +10,21 @@ import { useToast } from '@/hooks/use-toast';
 import { handleHighlightPhotos } from '@/app/actions';
 
 const allPortfolioImages = [
-    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 1', hint: 'editorial fashion' },
-    { src: 'https://placehold.co/600x600.png', alt: 'Fashion photo 2', hint: 'haute couture' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Runway photo 1', hint: 'runway walk' },
-    { src: 'https://placehold.co/600x400.png', alt: 'Commercial photo 1', hint: 'commercial smile' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 3', hint: 'street style' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Editorial photo 2', hint: 'beauty shot' },
-    { src: 'https://placehold.co/600x500.png', alt: 'Commercial photo 2', hint: 'lifestyle product' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Runway photo 2', hint: 'designer show' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 4', hint: 'portrait' },
-    { src: 'https://placehold.co/600x700.png', alt: 'Editorial photo 3', hint: 'magazine cover' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Commercial photo 3', hint: 'product ad' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Runway photo 3', hint: 'fashion week' },
+    { src: '/portfolio/1.jpg', alt: 'Portfolio image 1', hint: 'editorial fashion' },
+    { src: '/portfolio/2.jpg', alt: 'Portfolio image 2', hint: 'haute couture' },
+    { src: '/portfolio/3.jpg', alt: 'Portfolio image 3', hint: 'runway walk' },
+    { src: '/portfolio/4.jpg', alt: 'Portfolio image 4', hint: 'commercial smile' },
+    { src: '/portfolio/5.jpg', alt: 'Portfolio image 5', hint: 'street style' },
+    { src: '/portfolio/6.jpg', alt: 'Portfolio image 6', hint: 'beauty shot' },
+    { src: '/portfolio/7.jpg', alt: 'Portfolio image 7', hint: 'lifestyle product' },
+    { src: '/portfolio/8.jpg', alt: 'Portfolio image 8', hint: 'designer show' },
+    { src: '/portfolio/9.jpg', alt: 'Portfolio image 9', hint: 'portrait' },
+    { src: '/portfolio/10.jpg', alt: 'Portfolio image 10', hint: 'magazine cover' },
 ];
 
 const allImageUrls = allPortfolioImages.map(img => img.src);
 
 function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: string; }) {
-  // Use a unique key combining src and alt, and index as a fallback
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -66,6 +63,8 @@ export default function PortfolioSection() {
     setIsHighlighting(true);
     setHighlightedPhotos([]);
     try {
+      // NOTE: AI Photo Highlighting may not work well with local files during development
+      // as the AI cannot access localhost URLs. This will work once deployed.
       const result = await handleHighlightPhotos(allImageUrls);
       if (result.success && result.data?.topPhotoUrls) {
         setHighlightedPhotos(result.data.topPhotoUrls);
@@ -91,10 +90,8 @@ export default function PortfolioSection() {
 
   const photosToDisplay = useMemo(() => {
     if (displayMode === 'highlights') {
-      // Find the full image object from the map using the highlighted URL
       return highlightedPhotos
         .map(url => {
-            // Find the first entry that matches the URL
             for (const [key, value] of allImagesMap.entries()) {
                 if (value.src === url) {
                     return { ...value, key };
@@ -104,7 +101,6 @@ export default function PortfolioSection() {
         })
         .filter(Boolean) as ({src: string, alt: string, hint: string, key: string})[];
     }
-    // Add the key to all images
     return allPortfolioImages.map((img, index) => ({...img, key: `${img.src}-${index}`}));
   }, [displayMode, highlightedPhotos, allImagesMap]);
 
@@ -113,9 +109,6 @@ export default function PortfolioSection() {
     <section id="portfolio" className="bg-background">
       <div className="container mx-auto text-center">
         <h2 className="font-headline text-4xl md:text-5xl font-bold mb-4">Portfolio</h2>
-        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-          A collection of my work across fashion, editorial, and commercial projects.
-        </p>
         <div className="flex justify-center mb-12 gap-4">
           <Button onClick={onHighlight} disabled={isHighlighting} size="lg" variant="default">
             {isHighlighting ? (
