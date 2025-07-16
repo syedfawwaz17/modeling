@@ -4,11 +4,10 @@ export default function HeroSection() {
   return (
     <section id="home" className="relative h-screen w-full flex items-center justify-center text-center p-0">
       <Image
-        src="https://placehold.co/1920x1080.png"
+        src="/portfolio/1.jpg"
         alt="Priyanka Bishnoi hero image"
-        layout="fill"
-        objectFit="cover"
-        className="z-0"
+        fill
+        className="z-0 object-cover"
         priority
         data-ai-hint="fashion model"
       />
