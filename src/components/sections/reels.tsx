@@ -3,9 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PlayCircle } from 'lucide-react';
 
 const videos = [
-  { src: 'https://placehold.co/400x700/E0BBE4/000000', alt: 'Reel 1', hint: 'fashion reel' },
-  { src: 'https://placehold.co/400x700/957DAD/FFFFFF', alt: 'Reel 2', hint: 'behind scenes' },
-  { src: 'https://placehold.co/400x700/D291BC/FFFFFF', alt: 'Reel 3', hint: 'runway video' },
+  { src: 'https://placehold.co/400x700.png', alt: 'Reel 1', hint: 'fashion reel' },
+  { src: 'https://placehold.co/400x700.png', alt: 'Reel 2', hint: 'behind scenes' },
+  { src: 'https://placehold.co/400x700.png', alt: 'Reel 3', hint: 'runway video' },
 ];
 
 export default function ReelsSection() {
