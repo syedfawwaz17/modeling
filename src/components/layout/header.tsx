@@ -2,10 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
 
 const navLinks = [
   { href: '#about', label: 'About' },
@@ -16,17 +15,10 @@ const navLinks = [
 ];
 
 const Logo = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 100 40"
-    className="h-8 w-auto text-foreground"
-    fill="currentColor"
-  >
-    <path d="M10,40 C10,40 2.5,35 2.5,20 C2.5,5 10,0 10,0 L12,0 C12,0 20,5 20,20 C20,35 12,40 12,40 L10,40 Z M11,5 C11,5 6,8 6,20 C6,32 11,35 11,35 L13,35 C13,35 17,32 17,20 C17,8 13,5 13,5 L11,5 Z" />
-    <path d="M40,0 C30,0 25,10 25,20 C25,30 30,40 40,40 L45,40 C55,40 60,30 60,20 C60,10 55,0 45,0 L40,0 Z M40,5 L45,5 C52,5 55,12 55,20 C55,28 52,35 45,35 L40,35 C33,35 30,28 30,20 C30,12 33,5 40,5 Z" transform="translate(15,0)"/>
-  </svg>
+  <span className="font-headline text-2xl font-bold tracking-tight text-foreground">
+    Priyanka Bishnoi
+  </span>
 );
-
 
 export default function Header() {
   const [isSheetOpen, setSheetOpen] = useState(false);
