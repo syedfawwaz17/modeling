@@ -11,37 +11,43 @@ import { handleHighlightPhotos } from '@/app/actions';
 
 const allPortfolioImages = [
     { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 1', hint: 'editorial fashion' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 2', hint: 'haute couture' },
-    { src: 'https://placehold.co/800x600.png', alt: 'Editorial photo 1', hint: 'magazine shoot' },
+    { src: 'https://placehold.co/600x600.png', alt: 'Fashion photo 2', hint: 'haute couture' },
     { src: 'https://placehold.co/600x800.png', alt: 'Runway photo 1', hint: 'runway walk' },
-    { src: 'https://placehold.co/800x600.png', alt: 'Commercial photo 1', hint: 'commercial smile' },
+    { src: 'https://placehold.co/600x400.png', alt: 'Commercial photo 1', hint: 'commercial smile' },
     { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 3', hint: 'street style' },
-    { src: 'https://placehold.co/800x600.png', alt: 'Editorial photo 2', hint: 'beauty shot' },
-    { src: 'https://placehold.co/600x800.png', alt: 'Commercial photo 2', hint: 'lifestyle product' },
+    { src: 'https://placehold.co/600x800.png', alt: 'Editorial photo 2', hint: 'beauty shot' },
+    { src: 'https://placehold.co/600x500.png', alt: 'Commercial photo 2', hint: 'lifestyle product' },
     { src: 'https://placehold.co/600x800.png', alt: 'Runway photo 2', hint: 'designer show' },
+    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 4', hint: 'portrait' },
+    { src: 'https://placehold.co/600x700.png', alt: 'Editorial photo 3', hint: 'magazine cover' },
+    { src: 'https://placehold.co/600x800.png', alt: 'Commercial photo 3', hint: 'product ad' },
+    { src: 'https://placehold.co/600x800.png', alt: 'Runway photo 3', hint: 'fashion week' },
 ];
 
 const allImageUrls = allPortfolioImages.map(img => img.src);
 
-function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: string }) {
+function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: string; }) {
+  // Use a unique key combining src and alt, and index as a fallback
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card className="overflow-hidden group cursor-pointer transform transition-transform duration-300 hover:scale-105 shadow-md hover:shadow-xl bg-card border-none">
-          <CardContent className="p-0 relative">
-            <Image
-              src={src}
-              alt={alt}
-              width={600}
-              height={800}
-              className="object-cover w-full h-auto"
-              data-ai-hint={hint}
-            />
-            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <Eye className="text-white h-10 w-10" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mb-4 break-inside-avoid">
+          <Card className="overflow-hidden group cursor-pointer transform transition-transform duration-300 hover:scale-105 shadow-md hover:shadow-xl bg-card border-none">
+            <CardContent className="p-0 relative">
+              <Image
+                src={src}
+                alt={alt}
+                width={600}
+                height={800}
+                className="object-cover w-full h-auto"
+                data-ai-hint={hint}
+              />
+              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <Eye className="text-white h-10 w-10" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </DialogTrigger>
       <DialogContent className="max-w-4xl p-0 bg-transparent border-none">
         <Image src={src} alt={alt} width={800} height={1200} className="w-full h-auto rounded-lg" data-ai-hint={hint} />
@@ -81,13 +87,25 @@ export default function PortfolioSection() {
     setIsHighlighting(false);
   };
   
-  const allImagesMap = useMemo(() => new Map(allPortfolioImages.map(img => [img.src, img])), []);
+  const allImagesMap = useMemo(() => new Map(allPortfolioImages.map((img, index) => [`${img.src}-${index}`, img])), []);
 
   const photosToDisplay = useMemo(() => {
     if (displayMode === 'highlights') {
-      return highlightedPhotos.map(src => allImagesMap.get(src)).filter(Boolean) as {src: string, alt: string, hint: string}[];
+      // Find the full image object from the map using the highlighted URL
+      return highlightedPhotos
+        .map(url => {
+            // Find the first entry that matches the URL
+            for (const [key, value] of allImagesMap.entries()) {
+                if (value.src === url) {
+                    return { ...value, key };
+                }
+            }
+            return null;
+        })
+        .filter(Boolean) as ({src: string, alt: string, hint: string, key: string})[];
     }
-    return allPortfolioImages;
+    // Add the key to all images
+    return allPortfolioImages.map((img, index) => ({...img, key: `${img.src}-${index}`}));
   }, [displayMode, highlightedPhotos, allImagesMap]);
 
 
@@ -98,7 +116,6 @@ export default function PortfolioSection() {
         <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
           A collection of my work across fashion, editorial, and commercial projects.
         </p>
-
         <div className="flex justify-center mb-12 gap-4">
           <Button onClick={onHighlight} disabled={isHighlighting} size="lg" variant="default">
             {isHighlighting ? (
@@ -115,9 +132,9 @@ export default function PortfolioSection() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {photosToDisplay.map((photo, index) => (
-                <PortfolioImage key={`${photo.src}-${index}`} src={photo.src} alt={photo.alt} hint={photo.hint} />
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
+            {photosToDisplay.map((photo) => (
+                <PortfolioImage key={photo.key} src={photo.src} alt={photo.alt} hint={photo.hint} />
             ))}
         </div>
       </div>
