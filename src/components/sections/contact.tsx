@@ -15,17 +15,17 @@ export default function ContactSection() {
                     I'm available for collaborations, bookings, and creative projects. Let's create something amazing together. Reach out via the form or my social channels.
                 </p>
                 <div className="flex items-center gap-4">
-                  <a href="mailto:priyanka.bishnoi@example.com" aria-label="Email" className="group">
+                  <a href="mailto:pihubishnoi134@gmail.com" aria-label="Email" className="group">
                     <div className="p-3 bg-background rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent">
                       <Mail className="h-6 w-6 text-primary" />
                     </div>
                   </a>
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="group">
+                  <a href="https://instagram.com/Priyankaabishnoii" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="group">
                      <div className="p-3 bg-background rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent">
                       <Instagram className="h-6 w-6 text-primary" />
                     </div>
                   </a>
-                  <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="group">
+                  <a href="https://wa.me/7851000469" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="group">
                      <div className="p-3 bg-background rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent">
                       <MessageCircle className="h-6 w-6 text-primary" />
                     </div>

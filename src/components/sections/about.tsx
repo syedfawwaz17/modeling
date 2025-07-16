@@ -28,11 +28,11 @@ export default function AboutSection() {
             <div className="space-y-4">
               <h3 className="font-headline text-2xl font-semibold">Measurements</h3>
               <ul className="list-none space-y-2 text-muted-foreground">
-                <li><span className="font-semibold text-foreground">Height:</span> 5' 9" (175 cm)</li>
-                <li><span className="font-semibold text-foreground">Bust:</span> 34" (86 cm)</li>
-                <li><span className="font-semibold text-foreground">Waist:</span> 25" (64 cm)</li>
-                <li><span className="font-semibold text-foreground">Hips:</span> 35" (89 cm)</li>
-                <li><span className="font-semibold text-foreground">Shoe Size:</span> 8 US (39 EU)</li>
+                <li><span className="font-semibold text-foreground">Height:</span> 5' 5"</li>
+                <li><span className="font-semibold text-foreground">Weight:</span> 52 kg</li>
+                <li><span className="font-semibold text-foreground">Bust:</span> 32"</li>
+                <li><span className="font-semibold text-foreground">Waist:</span> 28"</li>
+                <li><span className="font-semibold text-foreground">Hips:</span> 34"</li>
               </ul>
             </div>
           </div>
