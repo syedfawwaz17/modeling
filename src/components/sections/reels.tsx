@@ -4,9 +4,9 @@ import { PlayCircle } from 'lucide-react';
 import Link from 'next/link';
 
 const videos = [
-  { thumbnailUrl: '/reels/reel1-thumbnail.jpg', videoUrl: '/reels/reel1.mp4', alt: 'Reel 1', hint: 'fashion reel' },
-  { thumbnailUrl: '/reels/reel2-thumbnail.jpg', videoUrl: '/reels/reel2.mp4', alt: 'Reel 2', hint: 'behind scenes' },
-  { thumbnailUrl: '/reels/reel3-thumbnail.jpg', videoUrl: '/reels/reel3.mp4', alt: 'Reel 3', hint: 'runway video' },
+  { thumbnailUrl: '/reels/thumb1.jpg', videoUrl: '/reels/reel1.mp4', alt: 'Reel 1', hint: 'fashion reel' },
+  { thumbnailUrl: '/reels/thumb2.jpg', videoUrl: '/reels/reel2.mp4', alt: 'Reel 2', hint: 'behind scenes' },
+  { thumbnailUrl: '/reels/thumb3.jpg', videoUrl: '/reels/reel3.mp4', alt: 'Reel 3', hint: 'runway video' },
 ];
 
 export default function ReelsSection() {
