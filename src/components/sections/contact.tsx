@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,18 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Mail, Instagram, MessageCircle, Send } from 'lucide-react';
 
 export default function ContactSection() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const message = formData.get('message') as string;
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
+  const handleSendEmail = () => {
     const subject = encodeURIComponent(`Contact Form Submission from ${name}`);
     const body = encodeURIComponent(
       `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
     );
-
     window.location.href = `mailto:pihubishnoi134@gmail.com?subject=${subject}&body=${body}`;
   };
 
@@ -55,21 +53,21 @@ export default function ContactSection() {
                     <CardDescription>Fill out the form below to send me a message directly.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form className="space-y-4" onSubmit={handleSubmit}>
+                    <div className="space-y-4">
                         <div className="space-y-2">
-                             <Input id="name" name="name" placeholder="Your Name" required />
+                             <Input id="name" name="name" placeholder="Your Name" required value={name} onChange={(e) => setName(e.target.value)} />
                         </div>
                          <div className="space-y-2">
-                             <Input id="email" name="email" type="email" placeholder="Your Email" required />
+                             <Input id="email" name="email" type="email" placeholder="Your Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                          <div className="space-y-2">
-                             <Textarea id="message" name="message" placeholder="Your Message" rows={5} required />
+                             <Textarea id="message" name="message" placeholder="Your Message" rows={5} required value={message} onChange={(e) => setMessage(e.target.value)} />
                         </div>
-                        <Button type="submit" className="w-full">
+                        <Button onClick={handleSendEmail} className="w-full">
                             <Send className="mr-2 h-4 w-4" />
                             Send Message
                         </Button>
-                    </form>
+                    </div>
                 </CardContent>
             </Card>
         </div>
