@@ -7,9 +7,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PlayCircle } from 'lucide-react';
 
 const videos = [
-  { thumbnailUrl: '/reels/thumb1.jpg', videoUrl: '/reels/v1.mp4', alt: 'Reel 1', hint: 'fashion reel' },
-  { thumbnailUrl: '/reels/thumb2.jpg', videoUrl: '/reels/v2.mp4', alt: 'Reel 2', hint: 'behind scenes' },
-  { thumbnailUrl: '/reels/thumb3.jpg', videoUrl: '/reels/v3.mp4', alt: 'Reel 3', hint: 'runway video' },
+  { thumbnailUrl: '/portfolio/2.jpg', videoUrl: '/reels/v1.mp4', alt: 'Reel 1', hint: 'fashion reel' },
+  { thumbnailUrl: '/portfolio/3.jpg', videoUrl: '/reels/v2.mp4', alt: 'Reel 2', hint: 'behind scenes' },
+  { thumbnailUrl: '/portfolio/5.jpg', videoUrl: '/reels/v3.mp4', alt: 'Reel 3', hint: 'runway video' },
 ];
 
 const ReelCard = ({ thumbnailUrl, videoUrl, alt, hint }: (typeof videos)[0]) => {
