@@ -5,7 +5,7 @@ import { suggestOutfitTransitions } from "@/ai/flows/ai-outfit-transitions";
 
 export async function handleHighlightPhotos(photoUrls: string[]) {
   try {
-    const result = await highlightTopPhotos({ photoUrls });
+    const result = await highlightTopPhotos({ photoDataUris: photoUrls });
     return { success: true, data: result };
   } catch (error) {
     console.error("Error highlighting photos:", error);

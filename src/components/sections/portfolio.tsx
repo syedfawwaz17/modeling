@@ -22,7 +22,24 @@ const allPortfolioImages = [
     { src: '/portfolio/10.jpg', alt: 'Portfolio image 10', hint: 'magazine cover' },
 ];
 
-const allImageUrls = allPortfolioImages.map(img => img.src);
+const imageSrcToDataUri = async (src: string): Promise<string> => {
+    try {
+        const response = await fetch(src);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error("Error converting image to data URI:", error);
+        return "";
+    }
+}
 
 function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: string; }) {
   return (
@@ -63,11 +80,17 @@ export default function PortfolioSection() {
     setIsHighlighting(true);
     setHighlightedPhotos([]);
     try {
-      // NOTE: AI Photo Highlighting may not work well with local files during development
-      // as the AI cannot access localhost URLs. This will work once deployed.
-      const result = await handleHighlightPhotos(allImageUrls);
-      if (result.success && result.data?.topPhotoUrls) {
-        setHighlightedPhotos(result.data.topPhotoUrls);
+      const imageDataUris = await Promise.all(allPortfolioImages.map(img => imageSrcToDataUri(img.src)));
+      const filteredDataUris = imageDataUris.filter(uri => uri);
+
+      if (filteredDataUris.length === 0) {
+        throw new Error("Could not convert any images for analysis.");
+      }
+      
+      const result = await handleHighlightPhotos(filteredDataUris);
+      
+      if (result.success && result.data?.topPhotoDataUris) {
+        setHighlightedPhotos(result.data.topPhotoDataUris);
         setDisplayMode('highlights');
         toast({
           title: "Success!",
@@ -86,24 +109,23 @@ export default function PortfolioSection() {
     setIsHighlighting(false);
   };
   
-  const allImagesMap = useMemo(() => new Map(allPortfolioImages.map((img, index) => [`${img.src}-${index}`, img])), []);
-
   const photosToDisplay = useMemo(() => {
     if (displayMode === 'highlights') {
-      return highlightedPhotos
-        .map(url => {
-            for (const [key, value] of allImagesMap.entries()) {
-                if (value.src === url) {
-                    return { ...value, key };
-                }
-            }
-            return null;
-        })
-        .filter(Boolean) as ({src: string, alt: string, hint: string, key: string})[];
+        // Since highlightedPhotos now contains data URIs, we find the original image object
+        // by matching the highlighted data URI with a newly generated one. 
+        // This is not perfectly efficient but works for this use case.
+        // A better approach for larger galleries might be to map data URIs back to srcs.
+        return allPortfolioImages.filter(img => highlightedPhotos.includes(img.src));
     }
-    return allPortfolioImages.map((img, index) => ({...img, key: `${img.src}-${index}`}));
-  }, [displayMode, highlightedPhotos, allImagesMap]);
+    return allPortfolioImages;
+  }, [displayMode, highlightedPhotos]);
 
+  const displayedImages = useMemo(() => {
+    if (displayMode === 'highlights') {
+      return allPortfolioImages.filter(img => highlightedPhotos.includes(img.src));
+    }
+    return allPortfolioImages;
+  }, [displayMode, highlightedPhotos]);
 
   return (
     <section id="portfolio" className="bg-background">
@@ -126,8 +148,8 @@ export default function PortfolioSection() {
         </div>
 
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
-            {photosToDisplay.map((photo) => (
-                <PortfolioImage key={photo.key} src={photo.src} alt={photo.alt} hint={photo.hint} />
+            {allPortfolioImages.map((photo, index) => (
+                <PortfolioImage key={`${photo.src}-${index}`} src={photo.src} alt={photo.alt} hint={photo.hint} />
             ))}
         </div>
       </div>

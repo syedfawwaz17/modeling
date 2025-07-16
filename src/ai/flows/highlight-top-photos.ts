@@ -12,16 +12,16 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const HighlightTopPhotosInputSchema = z.object({
-  photoUrls: z.array(
-    z.string().describe('URL of the photo to be evaluated')
-  ).describe('An array of photo URLs to evaluate for highlighting.'),
+  photoDataUris: z.array(
+    z.string().describe("A photo as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'.")
+  ).describe('An array of photo data URIs to evaluate for highlighting.'),
 });
 export type HighlightTopPhotosInput = z.infer<typeof HighlightTopPhotosInputSchema>;
 
 const HighlightTopPhotosOutputSchema = z.object({
-  topPhotoUrls: z.array(
-    z.string().describe('URL of the top photos, based on engagement and aesthetic appeal')
-  ).describe('An array of photo URLs that are considered the top photos.'),
+  topPhotoDataUris: z.array(
+    z.string().describe('Data URI of the top photos, based on engagement and aesthetic appeal')
+  ).describe('An array of photo data URIs that are considered the top photos.'),
 });
 export type HighlightTopPhotosOutput = z.infer<typeof HighlightTopPhotosOutputSchema>;
 
@@ -35,11 +35,11 @@ const highlightTopPhotosPrompt = ai.definePrompt({
   output: {schema: HighlightTopPhotosOutputSchema},
   prompt: `You are an AI expert in determining aesthetically pleasing and high engagement photos.
 
-Given the following list of photo URLs, select the top photos based on aesthetic appeal and potential for high engagement. Return ONLY the URLs of the top photos in the output array. Do not include any other text or explanations.
+Given the following list of photos, select the top photos based on aesthetic appeal and potential for high engagement. Return ONLY the data URIs of the top photos in the output array. Do not include any other text or explanations.
 
-Photo URLs:
-{{#each photoUrls}}
-- {{{this}}}
+Photos:
+{{#each photoDataUris}}
+- {{media url=this}}
 {{/each}}
 `,
 });
