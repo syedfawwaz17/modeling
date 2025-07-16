@@ -10,7 +10,7 @@ export default function AboutSection() {
              <Card className="overflow-hidden shadow-lg w-full max-w-md bg-card border-none">
                 <CardContent className="p-0">
                    <Image
-                      src="/portfolio/1.jpg"
+                      src="/portfolio/7.jpg"
                       alt="About Priyanka Bishnoi"
                       width={600}
                       height={800}
