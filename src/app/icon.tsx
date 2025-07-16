@@ -13,16 +13,16 @@ export default function Icon() {
       <div
         style={{
           fontSize: 24,
-          background: 'hsl(240, 10%, 3.9%)',
+          background: '#FAD2E1',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'hsl(0, 0%, 98%)',
-          borderRadius: '6px',
-          fontFamily: '"Playfair Display", serif',
-          fontWeight: 700,
+          color: '#333',
+          borderRadius: '8px',
+          fontFamily: 'Playfair Display, serif',
+          fontWeight: 'bold',
         }}
       >
         PB
