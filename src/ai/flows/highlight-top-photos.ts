@@ -20,8 +20,8 @@ export type HighlightTopPhotosInput = z.infer<typeof HighlightTopPhotosInputSche
 
 const HighlightTopPhotosOutputSchema = z.object({
   topPhotoDataUris: z.array(
-    z.string().describe('Data URI of the top photos, based on engagement and aesthetic appeal')
-  ).describe('An array of photo data URIs that are considered the top photos.'),
+    z.string().describe('Data URI of one of the top photos, based on engagement and aesthetic appeal')
+  ).describe('An array of photo data URIs that are considered the top photos. This should be a subset of the input URIs.'),
 });
 export type HighlightTopPhotosOutput = z.infer<typeof HighlightTopPhotosOutputSchema>;
 
@@ -33,9 +33,9 @@ const highlightTopPhotosPrompt = ai.definePrompt({
   name: 'highlightTopPhotosPrompt',
   input: {schema: HighlightTopPhotosInputSchema},
   output: {schema: HighlightTopPhotosOutputSchema},
-  prompt: `You are an AI expert in determining aesthetically pleasing and high engagement photos.
+  prompt: `You are an AI expert in determining aesthetically pleasing and high engagement photos for a model's portfolio.
 
-Given the following list of photos, select the top photos based on aesthetic appeal and potential for high engagement. Return ONLY the data URIs of the top photos in the output array. Do not include any other text or explanations.
+Given the following list of photos, select the top 3 photos based on aesthetic appeal, composition, lighting, and potential for high engagement. Return ONLY the data URIs of the top 3 photos in the output array. Do not include any other text or explanations.
 
 Photos:
 {{#each photoDataUris}}

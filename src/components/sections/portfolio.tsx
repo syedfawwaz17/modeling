@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -21,25 +22,6 @@ const allPortfolioImages = [
     { src: '/portfolio/9.jpg', alt: 'Portfolio image 9', hint: 'portrait' },
     { src: '/portfolio/10.jpg', alt: 'Portfolio image 10', hint: 'magazine cover' },
 ];
-
-const imageSrcToDataUri = async (src: string): Promise<string> => {
-    try {
-        const response = await fetch(src);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch image: ${response.statusText}`);
-        }
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
-    } catch (error) {
-        console.error("Error converting image to data URI:", error);
-        return "";
-    }
-}
 
 function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: string; }) {
   return (
@@ -70,6 +52,7 @@ function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: st
   );
 }
 
+
 export default function PortfolioSection() {
   const [displayMode, setDisplayMode] = useState<'all' | 'highlights'>('all');
   const [highlightedPhotos, setHighlightedPhotos] = useState<string[]>([]);
@@ -80,17 +63,12 @@ export default function PortfolioSection() {
     setIsHighlighting(true);
     setHighlightedPhotos([]);
     try {
-      const imageDataUris = await Promise.all(allPortfolioImages.map(img => imageSrcToDataUri(img.src)));
-      const filteredDataUris = imageDataUris.filter(uri => uri);
-
-      if (filteredDataUris.length === 0) {
-        throw new Error("Could not convert any images for analysis.");
-      }
+      const imageSrcs = allPortfolioImages.map(img => img.src);
       
-      const result = await handleHighlightPhotos(filteredDataUris);
+      const result = await handleHighlightPhotos(imageSrcs);
       
-      if (result.success && result.data?.topPhotoDataUris) {
-        setHighlightedPhotos(result.data.topPhotoDataUris);
+      if (result.success && result.data?.topPhotoSrcs) {
+        setHighlightedPhotos(result.data.topPhotoSrcs);
         setDisplayMode('highlights');
         toast({
           title: "Success!",
@@ -109,23 +87,13 @@ export default function PortfolioSection() {
     setIsHighlighting(false);
   };
   
-  const photosToDisplay = useMemo(() => {
-    if (displayMode === 'highlights') {
-        // Since highlightedPhotos now contains data URIs, we find the original image object
-        // by matching the highlighted data URI with a newly generated one. 
-        // This is not perfectly efficient but works for this use case.
-        // A better approach for larger galleries might be to map data URIs back to srcs.
-        return allPortfolioImages.filter(img => highlightedPhotos.includes(img.src));
-    }
-    return allPortfolioImages;
-  }, [displayMode, highlightedPhotos]);
-
   const displayedImages = useMemo(() => {
     if (displayMode === 'highlights') {
       return allPortfolioImages.filter(img => highlightedPhotos.includes(img.src));
     }
     return allPortfolioImages;
   }, [displayMode, highlightedPhotos]);
+
 
   return (
     <section id="portfolio" className="bg-background">
@@ -148,7 +116,7 @@ export default function PortfolioSection() {
         </div>
 
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
-            {allPortfolioImages.map((photo, index) => (
+            {displayedImages.map((photo, index) => (
                 <PortfolioImage key={`${photo.src}-${index}`} src={photo.src} alt={photo.alt} hint={photo.hint} />
             ))}
         </div>
