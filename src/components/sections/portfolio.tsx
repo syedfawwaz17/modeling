@@ -116,35 +116,35 @@ export default function PortfolioSection() {
                 {highlightedPhotos.map((photoSrc) => {
                     const photoDetails = allImagesMap.get(photoSrc);
                     if (!photoDetails) return null;
-                    return <PortfolioImage key={photoSrc} src={photoSrc} alt={photoDetails.alt} hint={photoDetails.hint} />
+                    return <PortfolioImage key={`${photoSrc}-${photoDetails.alt}`} src={photoSrc} alt={photoDetails.alt} hint={photoDetails.hint} />
                 })}
             </div>
           </TabsContent>
           <TabsContent value="fashion" className="mt-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {portfolioImages.fashion.map((photo) => (
-                <PortfolioImage key={photo.src} {...photo} />
+                <PortfolioImage key={`${photo.src}-${photo.alt}`} {...photo} />
               ))}
             </div>
           </TabsContent>
           <TabsContent value="editorial" className="mt-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {portfolioImages.editorial.map((photo) => (
-                <PortfolioImage key={photo.src} {...photo} />
+                <PortfolioImage key={`${photo.src}-${photo.alt}`} {...photo} />
               ))}
             </div>
           </TabsContent>
           <TabsContent value="runway" className="mt-8">
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {portfolioImages.runway.map((photo) => (
-                <PortfolioImage key={photo.src} {...photo} />
+                <PortfolioImage key={`${photo.src}-${photo.alt}`} {...photo} />
               ))}
             </div>
           </TabsContent>
            <TabsContent value="commercial" className="mt-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {portfolioImages.commercial.map((photo) => (
-                <PortfolioImage key={photo.src} {...photo} />
+                <PortfolioImage key={`${photo.src}-${photo.alt}`} {...photo} />
               ))}
             </div>
           </TabsContent>
