@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -5,6 +7,21 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Mail, Instagram, MessageCircle, Send } from 'lucide-react';
 
 export default function ContactSection() {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const message = formData.get('message') as string;
+
+    const subject = encodeURIComponent(`Contact Form Submission from ${name}`);
+    const body = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+    );
+
+    window.location.href = `mailto:pihubishnoi134@gmail.com?subject=${subject}&body=${body}`;
+  };
+
   return (
     <section id="contact" className="bg-background">
       <div className="container mx-auto">
@@ -38,15 +55,15 @@ export default function ContactSection() {
                     <CardDescription>Fill out the form below to send me a message directly.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleSubmit}>
                         <div className="space-y-2">
-                             <Input id="name" placeholder="Your Name" />
+                             <Input id="name" name="name" placeholder="Your Name" required />
                         </div>
                          <div className="space-y-2">
-                             <Input id="email" type="email" placeholder="Your Email" />
+                             <Input id="email" name="email" type="email" placeholder="Your Email" required />
                         </div>
                          <div className="space-y-2">
-                             <Textarea id="message" placeholder="Your Message" rows={5} />
+                             <Textarea id="message" name="message" placeholder="Your Message" rows={5} required />
                         </div>
                         <Button type="submit" className="w-full">
                             <Send className="mr-2 h-4 w-4" />
