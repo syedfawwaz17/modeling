@@ -29,7 +29,6 @@ export async function handleHighlightPhotos(photoSrcs: string[]) {
 
     const result = await highlightTopPhotos({ photoDataUris });
 
-    // The result from the AI contains data URIs. We need to match them back to their original src paths.
     if (result.topPhotoDataUris) {
       const highlightedSrcs = result.topPhotoDataUris.map(highlightUri => {
         const originalIndex = photoDataUris.indexOf(highlightUri);
