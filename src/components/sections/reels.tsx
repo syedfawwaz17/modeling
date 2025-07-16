@@ -1,11 +1,12 @@
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { PlayCircle } from 'lucide-react';
+import Link from 'next/link';
 
 const videos = [
-  { src: 'https://placehold.co/400x700.png', alt: 'Reel 1', hint: 'fashion reel' },
-  { src: 'https://placehold.co/400x700.png', alt: 'Reel 2', hint: 'behind scenes' },
-  { src: 'https://placehold.co/400x700.png', alt: 'Reel 3', hint: 'runway video' },
+  { thumbnailUrl: '/reels/reel1-thumbnail.jpg', videoUrl: '/reels/reel1.mp4', alt: 'Reel 1', hint: 'fashion reel' },
+  { thumbnailUrl: '/reels/reel2-thumbnail.jpg', videoUrl: '/reels/reel2.mp4', alt: 'Reel 2', hint: 'behind scenes' },
+  { thumbnailUrl: '/reels/reel3-thumbnail.jpg', videoUrl: '/reels/reel3.mp4', alt: 'Reel 3', hint: 'runway video' },
 ];
 
 export default function ReelsSection() {
@@ -18,11 +19,11 @@ export default function ReelsSection() {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {videos.map((video, index) => (
-            <a href="#" key={index} className="block group">
+            <Link href={video.videoUrl} key={index} className="block group" target="_blank" rel="noopener noreferrer">
               <Card className="overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl bg-card border-none">
                 <CardContent className="p-0 relative">
                   <Image
-                    src={video.src}
+                    src={video.thumbnailUrl}
                     alt={video.alt}
                     width={400}
                     height={700}
@@ -34,7 +35,7 @@ export default function ReelsSection() {
                   </div>
                 </CardContent>
               </Card>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
