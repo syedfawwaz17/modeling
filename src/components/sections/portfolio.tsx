@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -10,23 +9,19 @@ import { Loader2, Sparkles, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { handleHighlightPhotos } from '@/app/actions';
 
-const portfolioImages = {
-  fashion: [
-    { src: 'https://placehold.co/600x800/E0BBE4/000000?text=Fashion+1', alt: 'Fashion photo 1', hint: 'editorial fashion' },
-    { src: 'https://placehold.co/600x800/957DAD/FFFFFF?text=Fashion+2', alt: 'Fashion photo 2', hint: 'haute couture' },
-  ],
-  editorial: [
-    { src: 'https://placehold.co/800x600/D291BC/FFFFFF?text=Editorial+1', alt: 'Editorial photo 1', hint: 'magazine shoot' },
-  ],
-  runway: [
-    { src: 'https://placehold.co/600x800/FEC8D8/000000?text=Runway+1', alt: 'Runway photo 1', hint: 'runway walk' },
-  ],
-  commercial: [
-    { src: 'https://placehold.co/800x600/FFDFD3/000000?text=Commercial+1', alt: 'Commercial photo 1', hint: 'commercial smile' },
-  ],
-};
+const allPortfolioImages = [
+    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 1', hint: 'editorial fashion' },
+    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 2', hint: 'haute couture' },
+    { src: 'https://placehold.co/800x600.png', alt: 'Editorial photo 1', hint: 'magazine shoot' },
+    { src: 'https://placehold.co/600x800.png', alt: 'Runway photo 1', hint: 'runway walk' },
+    { src: 'https://placehold.co/800x600.png', alt: 'Commercial photo 1', hint: 'commercial smile' },
+    { src: 'https://placehold.co/600x800.png', alt: 'Fashion photo 3', hint: 'street style' },
+    { src: 'https://placehold.co/800x600.png', alt: 'Editorial photo 2', hint: 'beauty shot' },
+    { src: 'https://placehold.co/600x800.png', alt: 'Commercial photo 2', hint: 'lifestyle product' },
+    { src: 'https://placehold.co/600x800.png', alt: 'Runway photo 2', hint: 'designer show' },
+];
 
-const allImageUrls = Object.values(portfolioImages).flat().map(img => img.src);
+const allImageUrls = allPortfolioImages.map(img => img.src);
 
 function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: string }) {
   return (
@@ -56,7 +51,7 @@ function PortfolioImage({ src, alt, hint }: { src: string; alt: string; hint: st
 }
 
 export default function PortfolioSection() {
-  const [activeTab, setActiveTab] = useState('fashion');
+  const [displayMode, setDisplayMode] = useState<'all' | 'highlights'>('all');
   const [highlightedPhotos, setHighlightedPhotos] = useState<string[]>([]);
   const [isHighlighting, setIsHighlighting] = useState(false);
   const { toast } = useToast();
@@ -68,7 +63,7 @@ export default function PortfolioSection() {
       const result = await handleHighlightPhotos(allImageUrls);
       if (result.success && result.data?.topPhotoUrls) {
         setHighlightedPhotos(result.data.topPhotoUrls);
-        setActiveTab('highlights');
+        setDisplayMode('highlights');
         toast({
           title: "Success!",
           description: "AI has selected the top photos.",
@@ -86,13 +81,26 @@ export default function PortfolioSection() {
     setIsHighlighting(false);
   };
   
-  const allImagesMap = useMemo(() => new Map(Object.values(portfolioImages).flat().map(img => [img.src, img])), []);
+  const allImagesMap = useMemo(() => new Map(allPortfolioImages.map(img => [img.src, img])), []);
+
+  const photosToDisplay = useMemo(() => {
+    if (displayMode === 'highlights') {
+      return highlightedPhotos.map(src => allImagesMap.get(src)).filter(Boolean) as {src: string, alt: string, hint: string}[];
+    }
+    return allPortfolioImages;
+  }, [displayMode, highlightedPhotos, allImagesMap]);
+
 
   return (
-    <section id="portfolio" className="bg-secondary">
+    <section id="portfolio" className="bg-background">
       <div className="container mx-auto text-center">
-        <div className="flex justify-center mb-12">
-          <Button onClick={onHighlight} disabled={isHighlighting} size="lg">
+        <h2 className="font-headline text-4xl md:text-5xl font-bold mb-4">Portfolio</h2>
+        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+          A collection of my work across fashion, editorial, and commercial projects.
+        </p>
+
+        <div className="flex justify-center mb-12 gap-4">
+          <Button onClick={onHighlight} disabled={isHighlighting} size="lg" variant="default">
             {isHighlighting ? (
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             ) : (
@@ -100,54 +108,18 @@ export default function PortfolioSection() {
             )}
             {isHighlighting ? 'Analyzing...' : 'Let AI Highlight Top Photos'}
           </Button>
+          {displayMode === 'highlights' && (
+             <Button onClick={() => setDisplayMode('all')} size="lg" variant="outline">
+                View All Photos
+            </Button>
+          )}
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-background/50">
-            <TabsTrigger value="highlights" disabled={highlightedPhotos.length === 0}>Highlights</TabsTrigger>
-            <TabsTrigger value="fashion">Fashion</TabsTrigger>
-            <TabsTrigger value="editorial">Editorial</TabsTrigger>
-            <TabsTrigger value="runway">Runway</TabsTrigger>
-            <TabsTrigger value="commercial">Commercial</TabsTrigger>
-          </TabsList>
-          <TabsContent value="highlights" className="mt-8">
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {highlightedPhotos.map((photoSrc) => {
-                    const photoDetails = allImagesMap.get(photoSrc);
-                    if (!photoDetails) return null;
-                    return <PortfolioImage key={`${photoSrc}-${photoDetails.alt}`} src={photoSrc} alt={photoDetails.alt} hint={photoDetails.hint} />
-                })}
-            </div>
-          </TabsContent>
-          <TabsContent value="fashion" className="mt-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {portfolioImages.fashion.map((photo) => (
-                <PortfolioImage key={`${photo.src}-${photo.alt}`} {...photo} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="editorial" className="mt-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {portfolioImages.editorial.map((photo) => (
-                <PortfolioImage key={`${photo.src}-${photo.alt}`} {...photo} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="runway" className="mt-8">
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {portfolioImages.runway.map((photo) => (
-                <PortfolioImage key={`${photo.src}-${photo.alt}`} {...photo} />
-              ))}
-            </div>
-          </TabsContent>
-           <TabsContent value="commercial" className="mt-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {portfolioImages.commercial.map((photo) => (
-                <PortfolioImage key={`${photo.src}-${photo.alt}`} {...photo} />
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {photosToDisplay.map((photo, index) => (
+                <PortfolioImage key={`${photo.src}-${index}`} src={photo.src} alt={photo.alt} hint={photo.hint} />
+            ))}
+        </div>
       </div>
     </section>
   );
