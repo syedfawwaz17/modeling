@@ -1,9 +1,10 @@
+
 "use client";
 
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import { PlayCircle, PauseCircle } from 'lucide-react';
+import { PlayCircle } from 'lucide-react';
 
 const videos = [
   { thumbnailUrl: '/reels/thumb1.jpg', videoUrl: '/reels/reel1.mp4', alt: 'Reel 1', hint: 'fashion reel' },
@@ -15,27 +16,20 @@ const ReelCard = ({ thumbnailUrl, videoUrl, alt, hint }: (typeof videos)[0]) => 
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const handlePlay = () => {
-    if (videoRef.current) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    }
+  const handleThumbnailClick = () => {
+    setIsPlaying(true);
   };
 
-  const handlePause = () => {
-     if (videoRef.current) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
-  }
-
   const handleVideoClick = () => {
-    if (isPlaying) {
-      handlePause();
-    } else {
-      handlePlay();
+    const video = videoRef.current;
+    if (video) {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
     }
-  }
+  };
 
   return (
     <Card className="overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl bg-card border-none group">
@@ -61,7 +55,7 @@ const ReelCard = ({ thumbnailUrl, videoUrl, alt, hint }: (typeof videos)[0]) => 
             />
             <div 
               className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
-              onClick={handlePlay}
+              onClick={handleThumbnailClick}
             >
               <PlayCircle className="text-white h-16 w-16 transition-transform duration-300 group-hover:scale-110" />
             </div>
